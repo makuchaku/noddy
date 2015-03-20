@@ -1,8 +1,11 @@
-require "./libs/toolbox"
-require "./libs/parse_methods"
-require "./libs/google_search"
-require "./libs/string_methods"
-require "./libs/tumblr_methods"
+require "./libs/modules/toolbox"
+require "./libs/modules/parse_methods"
+require "./libs/modules/google_search"
+require "./libs/modules/string_methods"
+require "./libs/modules/tumblr_methods"
+
+require "./libs/classes/twitter_for_noddy"
+require "./libs/classes/similar_keywords"
 
 
 class Noddy
@@ -13,22 +16,29 @@ class Noddy
   include ParseMethods
   include TumblrMethods
 
-  attr_accessor :tumblr
+  attr_accessor :tumblr, :twitter
 
 
   def initialize(options)
     @options = options
-    @auth = @options[:auth]
+    @tumblr_auth = @options[:tumblr_auth]
+    @twitter_config = @options[:twitter_config]
     @blog = @options[:blog]
     @keywords = @options[:keywords]
     @keyword_suffix = @options[:keyword_suffix]
 
     setup_tumblr
+    setup_twitter
   end
 
 
   def setup_tumblr
-    @tumblr = get_tumblr_client(@auth)
+    @tumblr = get_tumblr_client(@tumblr_auth)
+  end
+
+
+  def setup_twitter
+    @twitter = TwitterForNoddy.new(@twitter_config)
   end
 
 
@@ -57,7 +67,7 @@ class Noddy
         log "--------------------------------------------"
       end
     end # run_in_new_thread
-  end  
+  end
 
 
 
@@ -123,6 +133,11 @@ class Noddy
     blog = "#{blog}.tumblr.com"
     log "Following blog : #{blog}"
     @tumblr.follow(blog)    
+  end
+
+
+  def test
+    
   end
 
 

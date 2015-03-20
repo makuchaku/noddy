@@ -2,3 +2,5 @@ runner.rb
 .DS*
 phantom
 logs/*
+runner.yml
+irb.yml

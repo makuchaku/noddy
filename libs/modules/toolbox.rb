@@ -49,17 +49,10 @@ module Toolbox
   end
 
 
-
-  # Calls the given block with a sleeping factor of the rate limiting
-  # Currently we don't care about the lost activity as we don't redo
-  def rate_limit(where, &block)
-    # does nothing as of now
-  end  
-
-
   # Generic logging
   def log(object, prefix="log")
-    puts "[#{prefix.upcase}] #{object}"
+    timestamp = Time.now.to_s.split(" ")[0..1].join(" ")
+    puts "=> [#{timestamp}] [#{prefix.upcase}] #{object}"
   end
 
 
@@ -98,7 +91,7 @@ module Toolbox
   # returns true if data was found for the klass
   def check_hit?(klass, data, verbosity=:silent)
     sleep 0.1 # Prevent system abuse
-    print "."
+    #print "."
     command = "grep '#{data}' #{get_log_file_name(klass)} 1>/dev/null"
     result = system(command)
     puts "check_hit? was #{result} for #{klass}" if verbosity == :verbose
