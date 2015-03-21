@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'bundler/setup'
+
 require "./libs/modules/toolbox"
 require "./libs/modules/parse_methods"
 require "./libs/modules/google_search"

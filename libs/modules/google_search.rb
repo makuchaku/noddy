@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'bundler/setup'
+
 require "google-search"     # used for image search
 require "httparty"
 require 'htmlentities'
