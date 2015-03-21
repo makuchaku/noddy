@@ -58,6 +58,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   chatterbot
   google-search
   htmlentities
