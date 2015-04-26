@@ -49,10 +49,10 @@ class Noddy
   def threaded_looped_generate_posts
     return Toolbox::run_in_new_thread "#{__method__}" do
       Toolbox::looper do
-        log "--------------------------------------------"
+        log "----------------------threaded_looped_generate_posts----------------------"
         generate_photo_post(@keywords.sample, @keyword_suffix)
         random_sleep
-        log "--------------------------------------------"
+        log "----------------------threaded_looped_generate_posts----------------------"
       end
     end # run_in_new_thread
   end
@@ -86,7 +86,7 @@ class Noddy
 
       @tumblr.photo(@blog, {
           :source => image[:url],
-          :link => "http://j.mp/1O4ohxR",
+          :link => "http://j.mp/my_photograpy_samples",
           :caption => image[:titleNoFormatting],
           :tags => sentence_to_tags(keyword)
         })
@@ -139,9 +139,19 @@ class Noddy
   end
 
 
-  def test
-    
+
+
+
+
+
+  # Returns the newly created thread
+  def threaded_looped_generate_keywords
+    return Toolbox::run_in_new_thread "#{__method__}" do
+      s = SimilarKeywords.new({:twitter => @twitter})
+      s.find_more_keywords_like(["photography"]).get_keywords
+    end # run_in_new_thread
   end
+
 
 
 end
