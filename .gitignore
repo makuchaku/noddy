@@ -1,6 +1,6 @@
-runner.rb
+runner*rb
 .DS*
 phantom
 logs/*.txt
-runner.yml
+runner*yml
 irb.yml

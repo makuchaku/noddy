@@ -27,6 +27,7 @@ class Noddy
     @tumblr_auth = @options[:tumblr_auth]
     @twitter_config = @options[:twitter_config]
     @blog = @options[:blog]
+    @original_keywords = @options[:keywords]
     @keywords = @options[:keywords]
     @keyword_suffix = @options[:keyword_suffix]
 
@@ -80,13 +81,16 @@ class Noddy
   def generate_photo_post(keyword, keyword_suffix)
     klass = @blog + "_google_media"
     image = find_google_media(keyword, keyword_suffix, rand(10)*8, klass) # try to start media search from a random page number
-  
+    
+    # Remove from the @keywords if the given keyword is not one of the original keyword
+    @keywords.delete(keyword) if @original_keywords.index(keyword) != nil
+
     if image != nil
       log "Creating a photo post with image : #{image[:url]}" 
 
       @tumblr.photo(@blog, {
           :source => image[:url],
-          :link => "http://j.mp/my_photograpy_samples",
+          :link => "http://j.mp/1DXwSKd",
           :caption => image[:titleNoFormatting],
           :tags => sentence_to_tags(keyword)
         })
@@ -147,8 +151,16 @@ class Noddy
   # Returns the newly created thread
   def threaded_looped_generate_keywords
     return Toolbox::run_in_new_thread "#{__method__}" do
-      s = SimilarKeywords.new({:twitter => @twitter})
-      s.find_more_keywords_like(["photography"]).get_keywords
+      Toolbox::looper do
+        s = SimilarKeywords.new({:twitter => @twitter, :max_recursive_depth => 0})
+        new_keywords = s.find_more_keywords_like([@keywords.sample]).get_keywords
+        @keywords << new_keywords
+        log "Adding #{new_keywords} to @keywords", :threaded_looped_generate_keywords
+        @keywords.flatten!
+        @keywords.uniq!
+        log "@keywords = #{@keywords}", :threaded_looped_generate_keywords
+        random_sleep(60, 1, 600)
+      end # looper
     end # run_in_new_thread
   end
 

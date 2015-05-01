@@ -14,7 +14,7 @@ class SimilarKeywords
 
   def get_keywords
     keywords = @keywords.flatten.uniq
-    log keywords, "keywords"
+    #log keywords, "keywords"
     return keywords
   end
 
@@ -57,7 +57,7 @@ class SimilarKeywords
     keywords = find_new_keywords(tweets, unsearched_source_keywords)
     add_keywords(keywords)
 
-    log keywords, "Found keywords (RDepth=#{recursive_depth})"
+    #log keywords, "Found keywords (RDepth=#{recursive_depth})"
 
     if (recursive_depth < @max_recursive_depth)
       keywords.each { |keyword|
